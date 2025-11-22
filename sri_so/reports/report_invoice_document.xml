@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <template id="inherit_report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_quantity']" position="after">
+            <th name="sri_total" class="text-end">
+                <span>Sri Total</span>
+            </th>
+        </xpath>
+        <xpath expr="//table[@name='invoice_line_table']/thead/tr/th[@name='th_priceunit']" position="after">
+            <th name="piece_price" class="text-end">
+                <span>Piece Price</span>
+            </th>
+        </xpath>
+        <xpath expr="//table[@name='invoice_line_table']/tbody/t[@t-foreach='lines']/tr//td[@name='td_quantity']"
+               position="after">
+            <span t-field="line.sri_total"/>
+        </xpath>
+        <xpath expr="//table[@name='invoice_line_table']/tbody/t[@t-foreach='lines']/tr//td[@name='td_price_unit']">
+            <span class="text-nowrap" t-field="line.piece_price"/>
+
+        </xpath>
+
+    </template>
+
+
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Inherit Form View to Modify it -->
+    <record id="inherit_view_picking_form" model="ir.ui.view">
+        <field name="name">inherit.view.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook//page[@name='operations']" position="after">
+                <page string="Sri Availability" invisible="not is_sale_order">
+<!--                    <button name="sri_calculation" type="object" string="Calculate SRI" class="oe_highlight"/>-->
+
+                    <field name="mo_calculation_ids" readonly="1">
+                        <list create="false" delete="false">
+                            <field name="sri_product_id" optional="hide"/>
+                            <field name="sri_product_templ_id" optional="show"/>
+                            <field name="sri_demand"/>
+                            <field name="sri_quantity"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

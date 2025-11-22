@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_multiple_manufacturing_orders_list" model="ir.ui.view">
+        <field name="name">multiple.manufacturing.orders.form</field>
+        <field name="model">multiple.manufacturing.orders</field>
+        <field name="arch" type="xml">
+            <list string="Montant payé par livreur"
+                  decoration-muted="state_screen == 'new'"
+                  decoration-info="state_screen == 'created'"
+                  decoration-warning="state_screen == 'in_progress'"
+                  decoration-success="state_screen == 'completed'"
+                  decoration-danger="state_screen == 'aborted'"
+            >
+                <field name="name"/>
+                <field name="product_id"/>
+                <field name="quantity"/>
+                <field name="state_screen"/>
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_multiple_manufacturing_orders_form">
+        <field name="name">multiple.manufacturing.orders.form</field>
+        <field name="model">multiple.manufacturing.orders</field>
+        <field name="arch" type="xml">
+            <form string="Multiple Manufacturing Orders">
+                <header>
+                    <field name="state_screen" widget="statusbar"/>
+                </header>
+                <header>
+                    <button name="action_creation" invisible="state_screen != 'new'" string="Creation" type="object"
+                            class="oe_highlight"/>
+                    <button name="action_confirm" invisible="state != 'draft'" string="Confirm" type="object"
+                            class="oe_highlight"/>
+                    <button name="button_mark_done" invisible="state != 'confirmed'" string="Produce All" type="object"
+                            class="oe_highlight"/>
+                    <button name="action_cancel"
+                            invisible="account_mrp_production_ids == 0 or state in ['cancel', 'done']" string="Cancel"
+                            type="object" class="oe_highlight"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object"
+                                name="action_open_multiple_manufacturing_orders_mrp_production"
+                                class="oe_stat_button"
+                                icon="fa-industry"
+                                invisible="account_mrp_production_ids == 0">
+                            <field name="account_mrp_production_ids" widget="statinfo" string="Manufacturing Orders"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1 class="d-flex">
+                            <field name="name" placeholder="Manufacturing Reference" nolabel="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="product_id"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="quantity"/>
+                            <field name="is_action_refresh_calcultaing" invisible="1"/>
+                        </group>
+                        <group>
+                            <button name="action_refresh_calcultaing" invisible="not is_action_refresh_calcultaing"
+                                    string="Refresh calcultaing" type="object" class="oe_highlight"/>
+                        </group>
+                    </group>
+                    <field name="line_multiple_manufacturing_orders_ids">
+                        <list editable="bottom">
+                            <field name="product_id"/>
+                            <field name="quantity"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_menu_multiple_manufacturing_orders" model="ir.actions.act_window">
+        <field name="name">Multiple Manufacturing Orders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">multiple.manufacturing.orders</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_multiple_manufacturing_orders"
+              parent="mrp.menu_mrp_manufacturing"
+              name="Multiple Manufacturing Orders"
+              action="action_menu_multiple_manufacturing_orders"
+              sequence="0"/>
+
+</odoo>
