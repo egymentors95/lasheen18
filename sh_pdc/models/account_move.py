@@ -25,7 +25,7 @@ class AccountInvoice(models.Model):
 
     pdc_id = fields.Many2one('pdc.wizard')
     pdc_payment_ids = fields.Many2many(
-        'pdc.wizard', compute='_compute_pdc_payment_invoice')
+        'pdc.wizard')
     pdc_payment_count = fields.Integer(
         "Pdc payment count", compute='_compute_pdc_payment')
     total_pdc_payment = fields.Monetary("Total ", compute='_compute_total_pdc')
@@ -39,11 +39,15 @@ class AccountInvoice(models.Model):
     sh_pdc_status = fields.Selection([('draft', 'Draft'), ('registered', 'Registered'), ('returned', 'Returned'),
                               ('deposited', 'Deposited'), ('bounced', 'Bounced'), ('done', 'Done'), ('cancel', 'Cancelled')], string="PDC Status",compute='_compute_latest_pdc_payment_status',store=True,search='_search_latest_pdc_payment_status')
 
-    @api.depends('pdc_payment_ids.state')
+    sum_global_quantity = fields.Float(string="Sum Global Quantity")
+    invoice_line_ids_group = fields.One2many(
+        comodel_name='account.move.line', inverse_name='move_id', string='Invoice Lines Grouped')
+
+    @api.depends('pdc_payment_ids','pdc_payment_ids.state')
     def _compute_latest_pdc_payment_status(self):
         for rec in self:
             rec.sh_pdc_status = False
-            if rec.pdc_payment_ids:
+            if rec.pdc_payment_ids.state:
                 rec.sh_pdc_status = rec.pdc_payment_ids[-1].state
 
     def _search_latest_pdc_payment_status(self, operator, value):
@@ -83,17 +87,39 @@ class AccountInvoice(models.Model):
             rec.total_pdc_payment = rec.total_pdc_pending + \
                 rec.total_pdc_received + rec.total_pdc_cancel
 
-    def _compute_pdc_payment_invoice(self):
-        self.pdc_payment_ids = False
+    # def _compute_pdc_payment_invoice(self):
+    #     self.pdc_payment_ids = False
+    #     for move in self:
+    #         pdcs = self.env["pdc.wizard"].search([
+    #             '|', ('invoice_id', '=', move.id), ('invoice_ids.id', '=', move.id)
+    #         ])
+    #         if pdcs:
+    #             move.pdc_payment_ids = [(6, 0, pdcs.ids)]
+
+    def _update_pdc_payment_ids(self):
         for move in self:
             pdcs = self.env["pdc.wizard"].search([
-                '|', ('invoice_id', '=', move.id), ('invoice_ids.id', '=', move.id)
+                '|', ('invoice_id', '=', move.id), ('invoice_ids', 'in', move.id)
             ])
             if pdcs:
-                move.pdc_payment_ids = [(6, 0, pdcs.ids)]
+                move.write({'pdc_payment_ids': [(6, 0, pdcs.ids)]})
 
     def action_update_latest_pdc_status(self):
         for rec in self:
             rec.sh_pdc_status = False
             if rec.pdc_payment_ids:
                 rec.sh_pdc_status = rec.pdc_payment_ids[-1].state
+
+
+
+    @api.model
+    def create(self, vals):
+        rec = super().create(vals)
+        rec._update_pdc_payment_ids()
+        return rec
+
+    def write(self, vals):
+        res = super().write(vals)
+        self._update_pdc_payment_ids()
+        return res
+
