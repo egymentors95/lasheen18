@@ -1,0 +1,272 @@
+<odoo>
+    <!-- تعريف واجهة النموذج -->
+    <record id="view_project_worksite_form" model="ir.ui.view">
+        <field name="name">project.worksite.form</field>
+        <field name="model">project.worksite</field>
+        <field name="arch" type="xml">
+            <form string="Project">
+                <header>
+                    <button name="create_sup_project" string="Create" type="object" class="oe_highlight"/>
+                </header>
+                <sheet>
+
+
+                    <field name="personal_image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Project Name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Project..."/>
+                            <field name="code" placeholder="code"/>
+
+                        </h1>
+                    </div>
+
+
+                    <group>
+                        <group string="Worksite Information">
+
+                            <field name="date"/>
+                            <field name="owner"/>
+                            <field name="company_id"/>
+                            <field name="worksite_type"/>
+                            <field name="accumulated"/>%
+                        </group>
+
+                        <!-- قسم العنوان بتنسيق مخصص -->
+                        <group string="Address Details">
+                            <field name="regions_id"/>
+                            <label for="street" string="Address"/>
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street..." class="o_address_street"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                <field name="city" placeholder="City" class="o_address_city"/>
+                                <field name="state_id" class="o_address_state" placeholder="State"
+                                       options="{'no_open': True, 'no_quick_create': True}"
+                                       context="{'default_country_id': country_id}"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                <field name="country_id" placeholder="Country" class="o_address_country"
+                                       options="{'no_open': True, 'no_create': True}"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group string="Units / Area Details">
+                        <group>
+                            <field name="available_units"/>
+                            <field name="sold_units"/>
+                        </group>
+                        <group>
+                            <field name="available_area"/>
+                            <field name="sold_area"/>
+                        </group>
+                    </group>
+                    <!-- تعريف الـ Notebook (دفتر) -->
+                    <notebook>
+                        <page string="Basic Information">
+
+
+                            <group string="">
+                                <field name="total_towers"/>
+                                <field name="floors"/>
+                                <field name="properties_per_floor"/>
+                                <field name="shops"/>
+                                <field name="amenities"/>
+                            </group>
+                            <div style="border-top: 1px solid #ccc; margin: 10px 0;"></div>
+
+                            <group string="">
+                                <field name="total_property_area"/>
+                                <field name="total_value"/>
+                                <field name="total_maintenance_collection"/>
+                            </group>
+
+                        </page>
+                        <!--                        <page string="project">-->
+                        <!--                            <field name="child_ids">-->
+                        <!--                                <list >-->
+                        <!--                                    <field name="name"/> -->
+
+                        <!--                                    <field name="code"/> -->
+
+                        <!--                                </list>-->
+
+                        <!--                            </field>-->
+                        <!--                        </page>-->
+                        <page string="properties">
+                            <field name="block_ids">
+                                <list>
+                                    <field name="code"/>
+
+                                    <field name="name"/>
+
+
+                                    <field name="region_id"/>
+
+
+                                </list>
+
+                            </field>
+
+                        </page>
+
+                        <page string="Floor Plans">
+                            <group name="project_floor_plan_image_ids" string="Floor Plans">
+                                <field name="project_floor_plan_image_ids" context="{'default_name': name}"
+                                       mode="kanban" options="{'create_text':'Add a Media'}" nolabel="1"/>
+                            </group>
+                        </page>
+
+
+                        <page string="Documents">
+                            <group name="project_image_ids" string="Floor Plans">
+                                <field name="project_image_ids" context="{'default_name': name}" mode="kanban"
+                                       options="{'create_text':'Add a Media'}" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <page string="additional information">
+                            <group>
+                                <field name="license_code"/>
+                                <field name="license_date"/>
+                                <field name="license_added"/>
+                                <field name="license_notarization"/>
+                            </group>
+                        </page>
+
+                        <page string="Geolocation">
+                            <group>
+                                <field name="address"/>
+
+                            </group>
+                        </page>
+                        <page string="notes">
+                            <field name="notes"/>
+                        </page>
+
+                    </notebook>
+                </sheet>
+                <chatter reload_on_follower="True"/>
+            </form>
+
+        </field>
+    </record>
+
+    <record id="unit_reservation_kanban" model="ir.ui.view">
+        <field name="name">building_kanban</field>
+        <field name="model">project.worksite</field>
+        <field name="arch" type="xml">
+            <kanban class="oe_background_grey o_kanban_dashboard">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="available_units"/>
+                <field name="sold_units"/>
+                <field name="available_area"/>
+                <field name="sold_area"/>
+
+                <templates>
+                    <t t-name="menu">
+                        <a role="menuitem" type="object" name="edit_action" class="dropdown-item">Edit</a>
+                        <a role="menuitem" type="object" name="delete_action" class="dropdown-item">Delete</a>
+                    </t>
+
+                    <t t-name="kanban-box">
+                        <div class="o_kanban_card" onclick="event.stopPropagation();">
+                            <div class="o_kanban_card_header">
+                                <strong>
+                                    <a type="object" name="open_action">
+                                        <field name="name"/>
+                                    </a>
+                                </strong>
+
+
+                                <div>
+                                    <button type="object" name="edit_action" string="Edit"/>
+                                    <button type="object" name="delete_action" string="Delete"/>
+                                </div>
+
+
+                            </div>
+                            <div class="o_kanban_card_body">
+                                <img class="card-img-top"
+                                     t-att-src="kanban_image('project.worksite', 'personal_image', record.id.raw_value)"
+                                     t-att-alt="record.name.value"/>
+
+
+                                <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
+                                    <div style="flex: 0 0 48%; margin-bottom: 10px;">
+                                        <p>Available Units:
+                                            <t t-esc="record.available_units.raw_value"/>
+                                        </p>
+                                        <p>Sold Units:
+                                            <t t-esc="record.sold_units.raw_value"/>
+                                        </p>
+                                    </div>
+                                    <div style="flex: 0 0 48%; margin-bottom: 10px;">
+                                        <p>Available Area:
+                                            <t t-esc="record.available_area.raw_value"/>
+                                            m²
+                                        </p>
+                                        <p>Sold Area:
+                                            <t t-esc="record.sold_area.raw_value"/>
+                                            m²
+                                        </p>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <!-- Tree View -->
+    <record id="view_project_tree" model="ir.ui.view">
+        <field name="name">project.worksite.tree</field>
+        <field name="model">project.worksite</field>
+        <field name="arch" type="xml">
+            <list string="Projects">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="owner"/>
+                <field name="regions_id"/>
+
+            </list>
+        </field>
+    </record>
+
+    <!-- (Search View) -->
+    <record id="view_project_worksite_search" model="ir.ui.view">
+        <field name="name">project.worksite.search</field>
+        <field name="model">project.worksite</field>
+        <field name="arch" type="xml">
+            <search string="Projects">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="company_id"/>
+                <filter name="active_projects" string="Active" domain="[('active', '=', True)]"/>
+                <filter name="archived_projects" string="Archived" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_project_new" model="ir.actions.act_window">
+        <field name="name">Projects</field>
+        <field name="res_model">project.worksite</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create the first project
+            </p>
+        </field>
+        <field name="domain">[('parent_id', '=', False)]</field> <!-- إضافة الشرط هنا -->
+    </record>
+
+    <menuitem id="menu_project_new" name="Projects" parent="menu_building_list" action="action_project_new"
+              sequence="2"/>
+
+
+</odoo>

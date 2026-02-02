@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Template-->
+<template>
+    <t t-name="template_name_real_estate_ProjectDashBoardMain">
+ 
+        <div class="o_control_panel" style="overflow-y: auto; max-height: 90vh;">
+            <div class="container-fluid bg_effect">
+
+ 
+<br/>
+<div class="text-center mb-4" style="font-size: 38px; font-weight: bold; color: white;">
+    Dashboard Real Estate
+</div> 
+        <div class="d-flex justify-content-end align-items-center mb-4" style="gap: 5px;">
+                    <div>
+                        <div class="dropdown custom-dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" 
+                                    style="width: 300px; height: 50px; background-color: #387786; color: white; border-radius: 15px;"
+                                    type="button" 
+                                    id="dropdownMenuButtonProjects" 
+                                    data-bs-toggle="dropdown" 
+                                    aria-expanded="false">
+                                Select Projects
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" style="width: 300px;" aria-labelledby="dropdownMenuButtonProjects">
+                                <li class="form-check px-3 custom-check-item">
+                                    <input type="checkbox" 
+                                        class="form-check-input" 
+                                        id="select_all_projects" 
+                                        value="all" 
+                                        t-on-change="_onSelectAllChange"/>
+                                    <label for="select_all_projects" class="form-check-label">
+                                        Select All
+                                    </label>
+                                </li>
+                                <t t-foreach="this.project_state.projects || []" t-as="project" t-key="project.id">
+                                    <li class="form-check px-3 custom-check-item">
+                                        <input type="checkbox" 
+                                            class="form-check-input project-checkbox" 
+                                            t-att-id="'project_' + project.id" 
+                                            t-att-value="project.id" 
+                                            t-on-change="_onProjectCheckboxChange"/>
+                                        <label t-att-for="'project_' + project.id" class="form-check-label">
+                                            <t t-esc="project.name"/>
+                                        </label>
+                                    </li>
+                                </t>
+                            </ul>  
+                        </div>
+                    </div>
+                </div> 
+                <div class="row gy-4" style="margin-top: 10px;"> 
+                    <div id="projects_sold_ahmady" class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="block_box text-center p-3">
+<!--                            <img src="/mentors_real_estate_dashboard_18/static/src/img/statistics.png" alt="search" class="img-fluid" style="max-width: 50px;"/>-->
+                            <div class="mt-3">
+                                <span class="project_count" id="sold_projects_ahmady">
+                                    <t t-esc="this.project_state.number_of_properties"/>
+                                </span>
+                                <br/>
+                                <span class="project_box_title">Number of Properties</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="projects_count_ahmady" class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="block_box text-center p-3" >
+<!--                            <img src="/mentors_real_estate_dashboard_18/static/src/img/statistics.png" alt="search" class="img-fluid" style="max-width: 50px;"/>-->
+                            <div class="mt-3">
+                                <span class="project_count" id="total_projects_ahmady">
+                                    <t t-esc="this.project_state.available_properties"/>
+                                </span>
+                                <br/>
+                                <span class="project_box_title">Available Properties</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="block_count_ahmady" class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="block_box text-center p-3"  >
+<!--                            <img src="/mentors_real_estate_dashboard_18/static/src/img/statistics.png" alt="search" class="img-fluid" style="max-width: 50px;"/>-->
+                            <div class="mt-3">
+                                <span class="project_count" id="total_projects_ahmady">
+                                    <t t-esc="this.project_state.booking_properties"/>
+                                </span>
+                                <br/>
+                                <span class="project_box_title">Booking Properties</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="product_count_ahmady" class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="block_box text-center p-3"  >
+<!--                            <img src="/mentors_real_estate_dashboard_18/static/src/img/statistics.png" alt="search" class="img-fluid" style="max-width: 50px;"/>-->
+                            <div class="mt-3">
+                                <span class="project_count" id="total_projects_ahmady">
+                                   <t t-esc="this.project_state.sold_records"/>
+                                </span>
+                                <br/>
+                                <span class="project_box_title">Sold properties</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="totals_mainddd_ahmady" class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="block_box text-center p-3"  >
+<!--                            <img src="/mentors_real_estate_dashboard_18/static/src/img/statistics.png" alt="search" class="img-fluid" style="max-width: 50px;"/>-->
+                            <div class="mt-3">
+                                <span class="project_count" id="total_projects_ahmady">
+                                    <t t-esc="this.project_state.lease_properties"/>
+                                </span>
+                                <br/>
+                                <span class="project_box_title">Lease Properties</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="total_projects_d_ahmady" class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="block_box text-center p-3"   >
+<!--                            <img src="/mentors_real_estate_dashboard_18/static/src/img/statistics.png" alt="search" class="img-fluid" style="max-width: 50px;"/>-->
+                            <div class="mt-3">
+                                <span class="project_count" id="total_projects_d_count_ahmady">
+                                    <t t-esc="this.project_state.total_invoice"/> SAR
+                                </span>
+                                <br/>
+                                <span class="project_box_title">Total Collected</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row justify-content-center mt-4 gy-3">
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="o_new_project_button text-center" t-on-click="_onClick_create_region">
+                            <span class="fa fa-plus" style="margin-right: 8px;"></span> New Region
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6">
+                        <div class="o_new_project_button text-center" t-on-click="_onClick_create_project">
+                            <span class="fa fa-plus" style="margin-right: 8px;"></span> New Projects
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6"> 
+                        <div class="o_new_project_button text-center" t-on-click="_onClick_create_block">
+                            <span class="fa fa-plus" style="margin-right: 8px;"></span> New Block
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6"> 
+                        <div class="o_new_project_button text-center" t-on-click="_onClick_create_booking">
+                            <span class="fa fa-plus" style="margin-right: 8px;"></span> New Booking
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-6"> 
+                        <div class="o_new_project_button text-center" t-on-click="_onClick_create_contract">
+                            <span class="fa fa-plus" style="margin-right: 8px;"></span> New Ownership Contract
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-5 gy-4">
+                            <div class="col-lg-6 col-md-12" style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <div class="projects_hours_pie_div chart-container card-shadow" style="position: relative; width: 80%; max-width: 500px; height: auto; margin: 0 auto;">
+                                    <canvas class="project_hours" style="width: 100%; height: auto;"></canvas>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12" style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <div class="chart-container card-shadow" style="position: relative; width: 90%; max-width: 1200px; height: auto; margin: 0 auto;">
+                                    <canvas t-ref="project_count_per_emp" class="project_count_per_emp"   style="width: 100%; height: 500px;"></canvas>
+                                </div>
+                            </div>
+
+                </div>
+
+                
+            </div>
+        </div>
+
+    </t>
+</template>
+
+ 

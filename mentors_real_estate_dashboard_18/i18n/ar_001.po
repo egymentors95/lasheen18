@@ -1,0 +1,116 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mentors_real_estate_dashboard_18
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0+e-20241111\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-12-18 21:40+0000\n"
+"PO-Revision-Date: 2024-12-18 21:40+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: mentors_real_estate_dashboard_18
+#. odoo-javascript
+#: code:addons/mentors_real_estate_dashboard_18/static/src/xml/tst.xml:0
+msgid "Available Properties"
+msgstr "العقارات المتاحة"
+
+#. module: mentors_real_estate_dashboard_18
+#. odoo-javascript
+#: code:addons/mentors_real_estate_dashboard_18/static/src/xml/tst.xml:0
+msgid "Booking Properties"
+msgstr "العقارات المحجوزة"
+
+#. module: mentors_real_estate_dashboard_18
+#: model:ir.ui.menu,name:mentors_real_estate_dashboard_18.dashboard_root_menu
+msgid "Dashboard"
+msgstr "لوحة التحكم"
+
+#. module: mentors_real_estate_dashboard_18
+#. odoo-javascript
+#: code:addons/mentors_real_estate_dashboard_18/static/src/xml/tst.xml:0
+msgid "Dashboard Real Estate"
+msgstr "لوحة تحكم العقارات"
+
+#. module: mentors_real_estate_dashboard_18
+#. odoo-javascript
+#: code:addons/mentors_real_estate_dashboard_18/static/src/xml/tst.xml:0
+msgid "Lease Properties"
+msgstr "العقارات المؤجرة"
+
+#. module: mentors_real_estate_dashboard_18
+#. odoo-javascript
+#: code:addons/mentors_real_estate_dashboard_18/static/src/xml/tst.xml:0
+msgid "New Block"
+msgstr "بلوك الجديد"
+
+#. module: mentors_real_estate_dashboard_18
+#. odoo-javascript
+#: code:addons/mentors_real_estate_dashboard_18/static/src/xml/tst.xml:0
+msgid "New Booking"
+msgstr "حجز الجديد"
+
+#. module: mentors_real_estate_dashboard_18
+#. odoo-javascript
+#: code:addons/mentors_real_estate_dashboard_18/static/src/xml/tst.xml:0
+msgid "New Ownership Contract"
+msgstr "عقد تمليك جديد"
+
+#. module: mentors_real_estate_dashboard_18
+#. odoo-javascript
+#: code:addons/mentors_real_estate_dashboard_18/static/src/xml/tst.xml:0
+msgid "New Projects"
+msgstr "مشروع جديد"
+
+#. module: mentors_real_estate_dashboard_18
+#. odoo-javascript
+#: code:addons/mentors_real_estate_dashboard_18/static/src/xml/tst.xml:0
+msgid "New Region"
+msgstr "منطقه جديده"
+
+#. module: mentors_real_estate_dashboard_18
+#. odoo-javascript
+#: code:addons/mentors_real_estate_dashboard_18/static/src/xml/tst.xml:0
+msgid "Number of Properties"
+msgstr "عدد العقارات"
+
+#. module: mentors_real_estate_dashboard_18
+#. odoo-javascript
+#: code:addons/mentors_real_estate_dashboard_18/static/src/xml/tst.xml:0
+msgid "SAR"
+msgstr "ر.س"
+
+#. module: mentors_real_estate_dashboard_18
+#. odoo-javascript
+#: code:addons/mentors_real_estate_dashboard_18/static/src/xml/tst.xml:0
+msgid "Select Projects"
+msgstr "اختر المشروعات"
+
+#. module: mentors_real_estate_dashboard_18
+#. odoo-javascript
+#: code:addons/mentors_real_estate_dashboard_18/static/src/xml/tst.xml:0
+msgid "Sold properties"
+msgstr "العقارات المباعة"
+
+#. module: mentors_real_estate_dashboard_18
+#. odoo-javascript
+#: code:addons/mentors_real_estate_dashboard_18/static/src/xml/tst.xml:0
+msgid "Total Collected"
+msgstr "مبالغ محصلة"
+
+#. module: mentors_real_estate_dashboard_18
+#: model:ir.actions.client,name:mentors_real_estate_dashboard_18.real_estate_dashboard_action_client
+msgid "real estate Dashbaord"
+msgstr "لوحة تحكم العقارات"
+
+#. module: mentors_real_estate_dashboard_18
+#. odoo-javascript
+#: code:addons/mentors_real_estate_dashboard_18/static/src/xml/tst.xml:0
+msgid "search"
+msgstr "بحث"

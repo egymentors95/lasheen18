@@ -1,0 +1,49 @@
+<odoo>
+    <data>
+      
+        <record id="view_worksite_type_form" model="ir.ui.view">
+            <field name="name">worksite.type.form</field>
+            <field name="model">worksite.type</field>
+            <field name="arch" type="xml">
+                <form string="Worksite Type">
+                    <sheet>
+                        <group>
+                            <field name="name" placeholder="Enter worksite type name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+       
+        <record id="view_worksite_type_tree" model="ir.ui.view">
+            <field name="name">worksite.type.tree</field>
+            <field name="model">worksite.type</field>
+            <field name="arch" type="xml">
+                <list string="Worksite Types">
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+
+ 
+        <record id="action_worksite_type" model="ir.actions.act_window">
+            <field name="name">Worksite Types</field>
+            <field name="res_model">worksite.type</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="view_worksite_type_tree"/>
+        </record>
+
+        <menuitem id="menu_worksite_type" name="Project Types" parent="itsys_real_estate.menu_settings" action="action_worksite_type" sequence="50"/>
+
+
+
+
+
+
+
+
+
+        
+    </data>
+</odoo>

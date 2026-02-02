@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+     
+
+        <record model="ir.ui.view" id="building_form">
+            <field name="name">building.form</field>
+            <field name="model">building</field>              
+            <field name="arch" type="xml">
+                <form string="Real Estate">
+                    <header>
+                        <button name="action_create_units" type="object" string="Create Units" class="oe_highlight"/>
+                       <!-- <field name="state" widget="statusbar" statusbar_visible="available,booked,leased,sold"/>
+                       <button name="action_state_booked" type="object" string="Booked" class="oe_highlight"/>
+                       <button name="action_state_leased" type="object" string="Leased" class="oe_highlight"/>
+                       <button name="action_state_sold" type="object" string="Sold" class="oe_highlight"/>
+                       <button name="action_state_available" type="object" string="Convert to Available" class="oe_highlight"/> -->
+
+
+                    </header>
+                    <sheet>
+                        <!-- <field name="image" widget="image" class="oe_avatar"/>     -->
+                        <div class="oe_button_box" name="button_box">
+
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="code"  />
+                                <field name="region_id"/>
+                                <field name="partner_id"
+                                
+                                 context="{'res_partner_search_mode': 'is_owner', 'default_is_owner':True,}"
+                                 domain="[('is_owner','=',True)]"/>
+                                <field name="project_id"/>
+                             
+
+                            </group>
+                            <group >
+                                <field name="purchase_date"/>
+                                <field name="launch_date"/>
+                                <field name="account_analytic_id" />
+                                <field name="company_id" groups="base.group_multi_company"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+
+                        <notebook colspan="4">
+                            <page string="invisible" invisible="1"/>
+                        </notebook>
+                    </sheet>
+                   <chatter reload_on_follower="True"/>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="building_base_pages_form">
+            <field name="name">building.base_pages.form</field>
+            <field name="model">building</field>
+            <field name="inherit_id" ref="building_form"/>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <notebook>
+                    <page string="Basic Information">
+                        <group>
+                            <group>
+                                <field name="type"/>
+                                <field name="status"/>
+                                <field name="building_area"/>
+                                <field name="land_area"/>
+                                <field name="constructed"/>
+                                <field name="lift"/>
+                                <field name="lift_f"/>
+                                <field name="pricing"/>
+                            </group>
+                            <group>
+                                <field name="no_of_floors"/>
+                                <field name="props_per_floors"/>
+                                <field name="penthouse"/>
+                                <field name="surface"/>
+                                <field name="garage"/>
+                                <field name="garden"/>
+                                <field name="north"/>
+                                <field name="south"/>
+                                <field name="east"/>
+                                <field name="west"/>
+                            </group>
+                        </group>
+                    </page>
+
+
+                    <page string="Properties">
+                        <field name="unit_ids"
+                               context="{'default_is_property':True,
+                               'form_view_ref':'itsys_real_estate.building_unit_form',
+                               'tree_view_ref':'itsys_real_estate.building_unit_list'}"/>
+                    </page>
+
+      
+
+
+                    <page string="Images">
+                        <group name="building_template_images" string="Building Images">
+                            <field name="building_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" options="{'create_text':'Add a Media'}" nolabel="1"/>
+                        </group>
+                    </page>
+                    <page string="Floor Plans">
+                        <group name="floor_plan_template_images" string="Floor Plans">
+                            <field name="property_floor_plan_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" options="{'create_text':'Add a Media'}" nolabel="1"/>
+                        </group>
+                    </page>
+                    <page string="Documents">
+                        <field name="attach_line">
+                            <list editable="bottom">
+                                <field name="name"/>
+                                <field name="file"/>
+                            </list>
+                        </field>
+                    </page>
+                    <page string="Additional Information">
+                        <group>
+                            <group>
+                                <field name="license_code"/>
+                                <field name="license_date"/>
+                                <field name="date_added"/>
+                                <field name="license_location"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Geolocation">
+                        <group>
+                            <group>
+                                <field name="address" widget="place_autocomplete" class="oe_inline"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Notes">
+                        <field name="note" colspan="4" nolabel="1"/>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+       
+       <record id="building_filter" model="ir.ui.view">
+            <field name="name">building.list.filter</field>
+            <field name="model">building</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Top Search">
+                    <group>
+                        <field name="name"/>
+                        <field name="partner_id"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter name="partner" string="Partner" domain="[]"  context="{'group_by':'partner_id'}"/>
+                        <filter name="region" string="Region" domain="[]"  context="{'group_by':'region_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+     
+
+      
+
+
+        <record model="ir.ui.view" id="building_list">
+            <field name="name">building tree</field>
+            <field name="model">building</field> 
+            <field name="arch" type="xml">
+                <list string="Building">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="region_id"/>
+                    <field name="partner_id"/>
+                    <field name="land_area"/>
+                    <field name="building_area"/>
+                    <field name="constructed"/>
+                    <field name="lift"/>
+                </list>
+            </field>
+        </record>
+
+       
+        <record model="ir.ui.view" id="building_list_web">
+            <field name="name">building.list_web</field>
+            <field name="model">building</field>
+            <field name="priority">1</field>
+            <field name="type">list</field>
+            <field name="arch" type="xml">
+                <list string="Real Estate" >
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="usage"/>
+                    <field name="surface" sum="Total Surface"/>
+                    <field name="lease_target"/>
+                    <field name="staircase"/>
+                    <field name="floor"/>
+                    <field name="lift"/>
+                    <field name="category"/>
+                    <field name="old_building"/>
+                    <field name="handicap"/>
+                    <field name="parking_place_rentable"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- <record id="building_kanban" model="ir.ui.view">
+            <field name="name">building_kanban</field>
+            <field name="model">building</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click d-flex flex-column" style="position: relative; overflow: hidden;">
+                                <style>
+                                    .kanban-ribbon {
+                                        font-size: 18px; /* زيادة حجم الخط */
+                                        font-weight: bold;
+                                        height: 50px; /* زيادة ارتفاع الشريط */
+                                        color: white !important;
+                                        background: #d5870d; /* لون الشريط */
+                                        padding: 10px;
+                                        border-radius: 5px;
+                                        position: absolute; /* لجعله في الزاوية */
+                                        top: 0; /* وضعه في الجزء العلوي */
+                                        right: 0; /* وضعه في الزاوية اليمنى */
+                                        transform: rotate(35deg); /* الميل */
+                                        width: 60%; /* عرض الشريط أكبر */
+                                        margin-right: -10%; /* تعديل المسافة لتقليل الخروج */
+                                        text-align: right; /* لجعل النص يبدأ من اليسار */
+                                        z-index: 10; /* لضمان ظهوره فوق العناصر الأخرى */
+                                        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* إضافة ظل */
+                                        padding-right: 50px; /* حشوة من اليسار لضبط موضع النص */
+                                    }
+                                    .kanban-available {
+                                        font-size: 18px; /* زيادة حجم الخط */
+                                        font-weight: bold;
+                                        height: 50px; /* زيادة ارتفاع الشريط */
+                                        color: white !important;
+                                        background: #28a745; /* لون الشريط */
+                                        padding: 10px;
+                                        border-radius: 5px;
+                                        position: absolute; /* لجعله في الزاوية */
+                                        top: 0; /* وضعه في الجزء العلوي */
+                                        right: 0; /* وضعه في الزاوية اليمنى */
+                                        transform: rotate(35deg); /* الميل */
+                                        width: 60%; /* عرض الشريط أكبر */
+                                        margin-right: -10%; /* تعديل المسافة لتقليل الخروج */
+                                        text-align: right; /* لجعل النص يبدأ من اليسار */
+                                        z-index: 10; /* لضمان ظهوره فوق العناصر الأخرى */
+                                        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* إضافة ظل */
+                                        padding-right: 50px; /* حشوة من اليسار لضبط موضع النص */
+                                    }
+                                    .kanban-leased {
+                                        font-size: 18px; /* زيادة حجم الخط */
+                                        font-weight: bold;
+                                        height: 50px; /* زيادة ارتفاع الشريط */
+                                        color: white !important;
+                                        background: #d5580d; /* لون الشريط */
+                                        padding: 10px;
+                                        border-radius: 5px;
+                                        position: absolute; /* لجعله في الزاوية */
+                                        top: 0; /* وضعه في الجزء العلوي */
+                                        right: 0; /* وضعه في الزاوية اليمنى */
+                                        transform: rotate(35deg); /* الميل */
+                                        width: 60%; /* عرض الشريط أكبر */
+                                        margin-right: -10%; /* تعديل المسافة لتقليل الخروج */
+                                        text-align: right; /* لجعل النص يبدأ من اليسار */
+                                        z-index: 10; /* لضمان ظهوره فوق العناصر الأخرى */
+                                        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* إضافة ظل */
+                                        padding-right: 50px; /* حشوة من اليسار لضبط موضع النص */
+                                    }
+                                    .kanban-sold {
+                                        font-size: 18px; /* زيادة حجم الخط */
+                                        font-weight: bold;
+                                        height: 50px; /* زيادة ارتفاع الشريط */
+                                        color: white !important;
+                                        background: #d70303; /* لون الشريط */
+                                        padding: 10px;
+                                        border-radius: 5px;
+                                        position: absolute; /* لجعله في الزاوية */
+                                        top: 0; /* وضعه في الجزء العلوي */
+                                        right: 0; /* وضعه في الزاوية اليمنى */
+                                        transform: rotate(35deg); /* الميل */
+                                        width: 60%; /* عرض الشريط أكبر */
+                                        margin-right: -10%; /* تعديل المسافة لتقليل الخروج */
+                                        text-align: right; /* لجعل النص يبدأ من اليسار */
+                                        z-index: 10; /* لضمان ظهوره فوق العناصر الأخرى */
+                                        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* إضافة ظل */
+                                        padding-right: 50px; /* حشوة من اليسار لضبط موضع النص */
+                                    } 
+
+                                    .kanban-divider {
+                                        width: 100%; /* عرض الخط */
+                                        height: 1px; /* ارتفاع الخط */
+                                        background-color: black; /* لون الخط إلى الأسود */
+                                        margin-top: 70px; /* المسافة فوق الخط */
+                                    }
+                                </style>
+                           
+                            
+                                <div class="kanban-ribbon" invisible="state != 'booked'">
+                                    <field name="state" />
+                                </div>
+
+                                <div class="kanban-available" invisible="state != 'available'">
+                                    <field name="state" />
+                                </div>
+
+                                <div class="kanban-leased" invisible="state != 'leased'">
+                                    <field name="state" />
+                                </div>
+
+                                <div class="kanban-sold" invisible="state != 'sold'">
+                                    <field name="state" />
+                                </div>
+ 
+                                
+                                
+                                <div class="o_kanban_image_full" style="margin-top: 10px; display: flex; justify-content: center;">
+                                    <field name="image" widget="image" options="{'size': (300, 500)}"/>
+                                </div>
+                         
+                                <div class="kanban-divider"></div>
+                                
+                                <div class="o_kanban_header" style="font-size: 20px; font-weight: bold; text-align: center; width: 100%;">
+                                    <field name="name" class="o_kanban_name"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>  -->
+
+
+        <record model="ir.actions.act_window" id="building_act1">
+            <field name="name">Block</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">building</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="view_id" ref="building_list"/>
+            <!-- <field name="search_view_id" ref="building_filter"/> -->
+        </record> 
+
+   
+        
+        <menuitem id="menu_itsys_real_estate" name="Real Estate" web_icon="itsys_real_estate,static/description/icon.png" sequence="28"/>
+        <menuitem id="menu_settings" name="Settings" parent="menu_itsys_real_estate" sequence="2000"/>
+
+
+        <menuitem id="menu_building_list" name="Property structure" parent="menu_itsys_real_estate" sequence="1"/>
+
+        
+        <menuitem sequence="3" action="building_act1" name="Blocks"  id="menu_building_list_sub" parent="menu_building_list"/>
+
+
+
+
+    </data>
+</odoo>

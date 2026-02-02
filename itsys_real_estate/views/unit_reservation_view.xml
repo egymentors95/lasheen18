@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Building Unit Reservation -->
+        <record id="unit_reservation_tree_view" model="ir.ui.view">
+            <field name="name">unit.reservation.tree</field>
+            <field name="model">unit.reservation</field>
+            <field name="arch" type="xml">
+                <list >
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="building" />
+                    <field name="building_unit"/>
+                    <field name="user_id"/>
+                    <field name="pricing"/>
+                    <field name="building" />
+                    <field name="building_code"/>
+                    <field name="building_unit"/>
+                    <field name="unit_code"/>
+                    <field name="floor"/>
+                    <field name="address"/>
+                    <field name="state"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="unit_reservation_form_view" model="ir.ui.view">
+            <field name="name">unit.reservation.form</field>
+            <field name="model">unit.reservation</field>
+            <field name="arch" type="xml">
+                <form string="Building Unit Reservation">
+                    <header>
+                        <button name="action_confirm" type="object"                                
+                                invisible="state != ('draft')"
+                                string="Confirm" class="oe_highlight"/>
+                        <button name="action_contract_ownership" type="object"
+                                invisible="state == 'canceled' and state == 'draft' and state == 'contracted'"
+                                
+                                string="Sell" class="oe_highlight"/>
+                        <button name="action_contract_rental" type="object"
+                                invisible="state == 'canceled' and state == 'draft' and state == 'contracted'"                                 
+                                string="Rent" class="oe_highlight"/>
+                        <button name="action_cancel" type="object"
+                                invisible="state == 'canceled' and state == 'draft' and state == 'contracted'"
+                               
+                                string="Cancel" class="oe_highlight"/>
+                        <button name="action_draft" type="object"
+                                string="Reset To Draft"
+                                invisible="state == 'draft' and state == 'contracted' and state == 'confirmed'"
+                                />
+<!--                        <button name="action_receive_deposit" type="object"-->
+<!--                                invisible="state != 'confirmed' "-->
+<!--                                -->
+<!--                                string="Receive Deposit" class="oe_highlight"/>-->
+
+                        <field name="state"
+                               widget="statusbar"
+                               statusbar_visible="draft,confirmed" />
+                    </header>
+                    <sheet>
+                        <field name="image" widget="image" class="oe_avatar"/>   
+                        <div class="oe_button_box" name="button_box">
+                            <button type="object"
+                                    name="view_contract_own"
+                                    class="oe_stat_button"
+                                    icon="fa-book"
+                                    invisible="contract_count_own == 0"
+                                 >
+                                <field name="contract_count_own" widget="statinfo"/>
+                            </button>
+                            <button type="object"
+                                    name="view_contract_rent"
+                                    class="oe_stat_button"
+                                    icon="fa-book"
+                                    invisible="contract_count_rent == 0"
+                                    >
+                                <field name="contract_count_rent" widget="statinfo"/>
+                            </button>
+<!--                            <button type="object"-->
+<!--                                    name="view_deposits"-->
+<!--                                    class="oe_stat_button"-->
+<!--                                    icon="fa-book"-->
+<!--                                    invisible="deposit_count == 0"-->
+<!--                                    >-->
+<!--                                <field name="deposit_count" widget="statinfo"/>-->
+<!--                            </button>-->
+                        </div>
+                        <separator string="Booking Data" colspan="4"/>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="user_id"/>
+                                <field name="partner_id" modifiers="{'readonly': [('state','!=','draft')]}" required="1"/>
+                                <field name="date" modifiers="{'readonly': [('state','!=','draft')]}" required="1"/>
+                            </group>
+                            <group>
+                                <field name="date_payment" modifiers="{'readonly': [('state','!=','draft')]}" />
+                                <field name="account_analytic_id" modifiers="{'readonly': [('state','!=','draft')]}" />
+                                <field name="account_income" invisible="1" /><!-- modifiers="{'readonly': [('state','!=','draft')]}"-->
+                                <field name="company_id" groups="base.group_multi_company"/>
+<!--                                <field name="deposit"/>-->
+                            </group>
+                        </group>
+                        <separator string="Building" colspan="4"/>
+                        <group>
+                            <group>
+                                <field name="building" modifiers="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="building_code" modifiers="{'readonly': [('state','!=','draft')]}"/>
+                            </group>
+                            <group>
+                                <field name="region" modifiers="{'readonly': [('state','!=','draft')]}" />  
+                            </group>
+                        </group>
+                        <separator string="Building Unit" colspan="4"/>
+                        <group>
+                            <group>
+                                <field name="building_unit" options="{'no_create': True, 'no_open': True}"  modifiers="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="unit_code" modifiers="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="floor" modifiers="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="address" modifiers="{'readonly': [('state','!=','draft')]}"/>
+                            </group>
+                            <group>
+                                <field name="type" modifiers="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="status" modifiers="{'readonly': [('state','!=','draft')]}"/>
+                                <field name="building_area" modifiers="{'readonly': [('state','!=','draft')]}"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <chatter reload_on_follower="True"/>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="unit_reservation_kanban_ahmady" model="ir.ui.view">
+            <field name="name">building_kanban</field>
+            <field name="model">unit.reservation</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click d-flex flex-column" style="position: relative; overflow: hidden;">
+                                <style>
+                                    .kanban-draft {
+                                        font-size: 18px; /* زيادة حجم الخط */
+                                        font-weight: bold;
+                                        height: 50px; /* زيادة ارتفاع الشريط */
+                                        color: white !important;
+                                        background: #d5870d; /* لون الشريط */
+                                        padding: 10px;
+                                        border-radius: 5px;
+                                        position: absolute; /* لجعله في الزاوية */
+                                        top: 0; /* وضعه في الجزء العلوي */
+                                        right: 0; /* وضعه في الزاوية اليمنى */
+                                        transform: rotate(35deg); /* الميل */
+                                        width: 60%; /* عرض الشريط أكبر */
+                                        margin-right: -10%; /* تعديل المسافة لتقليل الخروج */
+                                        text-align: right; /* لجعل النص يبدأ من اليسار */
+                                        z-index: 10; /* لضمان ظهوره فوق العناصر الأخرى */
+                                        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* إضافة ظل */
+                                        padding-right: 50px; /* حشوة من اليسار لضبط موضع النص */
+                                    }
+                                    .kanban-confirmed {
+                                        font-size: 18px; /* زيادة حجم الخط */
+                                        font-weight: bold;
+                                        height: 50px; /* زيادة ارتفاع الشريط */
+                                        color: white !important;
+                                        background: #28a745; /* لون الشريط */
+                                        padding: 10px;
+                                        border-radius: 5px;
+                                        position: absolute; /* لجعله في الزاوية */
+                                        top: 0; /* وضعه في الجزء العلوي */
+                                        right: 0; /* وضعه في الزاوية اليمنى */
+                                        transform: rotate(35deg); /* الميل */
+                                        width: 60%; /* عرض الشريط أكبر */
+                                        margin-right: -10%; /* تعديل المسافة لتقليل الخروج */
+                                        text-align: right; /* لجعل النص يبدأ من اليسار */
+                                        z-index: 10; /* لضمان ظهوره فوق العناصر الأخرى */
+                                        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* إضافة ظل */
+                                        padding-right: 50px; /* حشوة من اليسار لضبط موضع النص */
+                                    }
+                                    .kanban-contracted {
+                                        font-size: 18px; /* زيادة حجم الخط */
+                                        font-weight: bold;
+                                        height: 50px; /* زيادة ارتفاع الشريط */
+                                        color: white !important;
+                                        background: #d5580d; /* لون الشريط */
+                                        padding: 10px;
+                                        border-radius: 5px;
+                                        position: absolute; /* لجعله في الزاوية */
+                                        top: 0; /* وضعه في الجزء العلوي */
+                                        right: 0; /* وضعه في الزاوية اليمنى */
+                                        transform: rotate(35deg); /* الميل */
+                                        width: 60%; /* عرض الشريط أكبر */
+                                        margin-right: -10%; /* تعديل المسافة لتقليل الخروج */
+                                        text-align: right; /* لجعل النص يبدأ من اليسار */
+                                        z-index: 10; /* لضمان ظهوره فوق العناصر الأخرى */
+                                        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* إضافة ظل */
+                                        padding-right: 50px; /* حشوة من اليسار لضبط موضع النص */
+                                    }
+                                    .kanban-canceled {
+                                        font-size: 18px; /* زيادة حجم الخط */
+                                        font-weight: bold;
+                                        height: 50px; /* زيادة ارتفاع الشريط */
+                                        color: white !important;
+                                        background: #d70303; /* لون الشريط */
+                                        padding: 10px;
+                                        border-radius: 5px;
+                                        position: absolute; /* لجعله في الزاوية */
+                                        top: 0; /* وضعه في الجزء العلوي */
+                                        right: 0; /* وضعه في الزاوية اليمنى */
+                                        transform: rotate(35deg); /* الميل */
+                                        width: 60%; /* عرض الشريط أكبر */
+                                        margin-right: -10%; /* تعديل المسافة لتقليل الخروج */
+                                        text-align: right; /* لجعل النص يبدأ من اليسار */
+                                        z-index: 10; /* لضمان ظهوره فوق العناصر الأخرى */
+                                        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* إضافة ظل */
+                                        padding-right: 50px; /* حشوة من اليسار لضبط موضع النص */
+                                    } 
+
+                                    .kanban-divider {
+                                        width: 100%; /* عرض الخط */
+                                        height: 1px; /* ارتفاع الخط */
+                                        background-color: black; /* لون الخط إلى الأسود */
+                                        margin-top: 70px; /* المسافة فوق الخط */
+                                    }
+                                </style>
+                           
+                            
+                                <div class="kanban-draft" invisible="state != 'draft'">
+                                    <field name="state" />
+                                </div>
+
+                                <div class="kanban-confirmed" invisible="state != 'confirmed'">
+                                    <field name="state" />
+                                </div>
+
+                                <div class="kanban-contracted" invisible="state != 'contracted'">
+                                    <field name="state" />
+                                </div>
+
+                                <div class="kanban-canceled" invisible="state != 'canceled'">
+                                    <field name="state" />
+                                </div> 
+                                
+                                
+                                <div class="o_kanban_image_full" style="margin-top: 10px; display: flex; justify-content: center;">
+                                    <field name="image" widget="image" options="{'size': (300, 500)}"/>
+                                </div>
+                                
+                           
+                                <div class="kanban-divider"></div>
+                                
+                                <div class="o_kanban_header" style="font-size: 20px; font-weight: bold; text-align: center; width: 100%;">
+                                    <field name="name" class="o_kanban_name"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        
+ 
+  
+
+
+
+
+
+
+
+        <record id="unit_reservation_form_action" model="ir.actions.act_window">
+            <field name="name">Booking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">unit.reservation</field>
+            <field name="view_mode">list,form,kanban</field>
+            <!-- <field name="view_id" ref="unit_reservation_tree_view"/> -->
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to add a new Unit Reservation
+                </p>
+            </field>
+        </record>
+
+
+        <record id="auto_cancel_reservation_sync" model="ir.cron">
+            <field name="name">Auto Cancel Unit Reservation</field>
+            <field name="model_id" ref="itsys_real_estate.model_unit_reservation"/>
+            <field name="state">code</field>
+            <field name="code">model.auto_cancel_reservation()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>           
+      </record>
+  
+    
+        
+
+
+    
+        <menuitem id="menu_reservation_main" name="Property Booking" parent="itsys_real_estate.menu_itsys_real_estate" action="unit_reservation_form_action" sequence="23"/>
+
+    </data>
+</odoo>

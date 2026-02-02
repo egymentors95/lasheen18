@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <record id="real_estate_dashboard_action_client" model="ir.actions.client">
+        <field name="name">real estate Dashbaord</field>
+        <field name="tag">tag_real_estate_dashboard_main</field>
+    </record>
+
+    <record id="dashboard_real_estate" model="res.groups">
+        <field name="name">Real Estate Dashboard</field>
+    </record>
+
+    <menuitem id="dashboard_root_menu" name="Dashboard" action="real_estate_dashboard_action_client"
+              parent="itsys_real_estate.menu_itsys_real_estate" sequence="-5"
+              groups="mentors_real_estate_dashboard_18.dashboard_real_estate"/>
+</odoo>
