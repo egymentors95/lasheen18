@@ -11,9 +11,11 @@
     'category': '',
     'description': """"App made by by elmekkaoui.brahim@gmail.com""",
     'website': "elmekkaoui.brahim@gmail.com",
-    'images': [],
     'depends': [
         'pos_loyalty',
+    ],
+    'data': [
+        'views/views.xml'
     ],
     'assets': {
         'point_of_sale._assets_pos': [

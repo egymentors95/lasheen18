@@ -1,0 +1,14 @@
+<!-- (C) 2026 EL MEKKAOUI BRAHIM : elmekkaoui.brahim@gmail.com -->
+
+<odoo>
+    <record id="cheapest_product_loyalty_reward_view_form" model="ir.ui.view">
+        <field name="name">loyalty.reward.view.form.inherit.cheapest_product</field>
+        <field name="model">loyalty.reward</field>
+        <field name="inherit_id" ref="loyalty.loyalty_reward_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='description']" position="before">
+                <field name="dirtcly_product_line"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

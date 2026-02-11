@@ -4,6 +4,7 @@
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
+import { floatIsZero } from "@web/core/utils/numbers";
 
 function _newRandomRewardCode() {
     return (Math.random() + 1).toString(36).substring(3);
@@ -87,6 +88,11 @@ patch(PosOrder.prototype, {
         };
     },
     _getRewardLineValuesDiscount(args) {
+        for (let j = 0; j < this.lines.length; j++) {
+                    if (this.lines[j].discount == 100 && this.lines[j].price_subtotal == 0) {
+                        this.lines[j].set_discount(0);
+                    }
+                }
         const reward = args["reward"];
         const coupon_id = args["coupon_id"];
         const rewardAppliesTo = reward.discount_applicability;
@@ -104,7 +110,7 @@ patch(PosOrder.prototype, {
         let { discountable, discountablePerTax } = getDiscountable(reward);
         let { product_id_ref } = getDiscountable(reward);
         discountable = Math.min(this.get_total_with_tax(), discountable);
-        if (!discountable) {
+        if (floatIsZero(discountable)) {
             return [];
         }
         let maxDiscount = reward.discount_max_amount || Infinity;
@@ -137,7 +143,6 @@ patch(PosOrder.prototype, {
                 this.currency,
                 this.models
             );
-
             return [
                 {
                     product_id: discountProduct,
@@ -152,63 +157,6 @@ patch(PosOrder.prototype, {
                 },
             ];
         }
-
-        if (
-            rewardAppliesTo === "order" &&
-            ["per_point", "per_order"].includes(reward.discount_mode)
-        ) {
-            const rewardLineValues = [
-                {
-                    product_id: discountProduct,
-                    price_unit: -Math.min(maxDiscount, discountable),
-                    qty: 1,
-                    reward_id: reward,
-                    is_reward_line: true,
-                    coupon_id: coupon_id,
-                    points_cost: pointCost,
-                    reward_identifier_code: rewardCode,
-                    tax_ids: [],
-                },
-            ];
-
-            let rewardTaxes = reward.tax_ids;
-            if (rewardTaxes.length > 0) {
-                if (this.fiscal_position_id) {
-                    rewardTaxes = getTaxesAfterFiscalPosition(
-                        rewardTaxes,
-                        this.fiscal_position_id,
-                        this.models
-                    );
-                }
-
-                const matchingLines = this.get_orderlines().filter(
-                    (line) =>
-                        !line.is_delivery &&
-                        line.tax_ids.length === rewardTaxes.length &&
-                        line.tax_ids.every((tax_id) => rewardTaxes.includes(tax_id))
-                );
-
-                if (matchingLines.length == 0) {
-                    return _t("No product is compatible with this promotion.");
-                }
-
-                const untaxedAmount = matchingLines.reduce(
-                    (sum, line) => sum + line.get_price_without_tax(),
-                    0
-                );
-                rewardLineValues[0].price_unit = Math.max(
-                    -untaxedAmount,
-                    rewardLineValues[0].price_unit
-                );
-
-                rewardLineValues[0].tax_ids = rewardTaxes;
-            }
-            if (Math.abs(rewardLineValues[0].price_unit) > this.amount_untaxed) {
-                rewardLineValues[0].price_unit = -this.amount_untaxed;
-            }
-            return rewardLineValues;
-        }
-
         const discountFactor = discountable ? Math.min(1, maxDiscount / discountable) : 1;
         const result = Object.entries(discountablePerTax).reduce((lst, entry) => {
             if (!entry[1]) {
@@ -216,11 +164,18 @@ patch(PosOrder.prototype, {
             }
             let taxIds = entry[0] === "" ? [] : entry[0].split(",").map((str) => parseInt(str));
             taxIds = this.models["account.tax"].filter((tax) => taxIds.includes(tax.id));
-
-            lst.push({
+            if (reward.dirtcly_product_line) {
+                this.lines.forEach(line => line.product_id.id === product_id_ref && (line.apply_discount = true));
+                const applyDiscounts = (lineCount) => {
+                    this.lines.filter(line => line.apply_discount).sort((a, b) => a.getComboTotalPrice() - b.getComboTotalPrice()).slice(0, lineCount).forEach(line => line.set_discount(100));
+                };
+                const lineCount = this.lines.length === 2 || this.lines.length === 3 ? 1 : this.lines.length <= 5 ? 2 : 3;
+                if (lineCount > 0) {applyDiscounts(lineCount);}
+            } else {
+                lst.push({
                 product_id: discountProduct,
                 product_id_ref: product_id_ref,
-                price_unit: -(entry[1] * discountFactor),
+                price_unit: -(Math.min(this.get_total_with_tax(), entry[1]) * discountFactor),
                 qty: 1,
                 reward_id: reward,
                 is_reward_line: true,
@@ -228,7 +183,8 @@ patch(PosOrder.prototype, {
                 points_cost: 0,
                 reward_identifier_code: rewardCode,
                 tax_ids: taxIds,
-            });
+                });
+            }
             return lst;
         }, []);
         if (result.length) {
@@ -236,5 +192,9 @@ patch(PosOrder.prototype, {
         }
         return result;
     },
+<<<<<<< HEAD
 })
 //092D4B
+=======
+})
+>>>>>>> 39e3b2cd62c2de8883c30f05476d7023731c24ce
