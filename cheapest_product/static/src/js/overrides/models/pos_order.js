@@ -11,14 +11,14 @@ function _newRandomRewardCode() {
 
 patch(PosOrder.prototype, {
     _getCheapestLine() {
-        const product_ids = this.lines.filter(line => line.reward_id && line._raw?.product_id_ref).map(line => line._raw.product_id_ref);
+        const product_ids = this.lines.filter(line => line.reward_id && line.raw?.product_id_ref).map(line => line.raw.product_id_ref);
         for (let j = 0; j < this.lines.length; j++) {
             if (product_ids.includes(this.lines[j].product_id.id)) {
                 if (this.lines[j].qty > 1) {
                     const index = product_ids.indexOf(this.lines[j].product_id.id);
                     if (index !== -1) product_ids.splice(index, 1);
                 }
-                if (this.lines[j]._raw?.product_id_ref) product_ids.push(this.lines[j]._raw.product_id_ref);
+                if (this.lines[j].raw?.product_id_ref) product_ids.push(this.lines[j].raw.product_id_ref);
             }
         }
         const filtered_lines = this.get_orderlines().filter((line) => !line.comboParent && !line.reward_id && line.get_quantity && !product_ids.includes(line.product_id.id));
