@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # (C) 2025 EL MEKKAOUI BRAHIM : elmekkaoui.brahim@gmail.com
 
+from . import models
+
 def pre_init_check(cr):
     from odoo.service import common
     from odoo.exceptions import UserError
