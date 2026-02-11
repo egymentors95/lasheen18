@@ -192,9 +192,4 @@ patch(PosOrder.prototype, {
         }
         return result;
     },
-<<<<<<< HEAD
 })
-//092D4B
-=======
-})
->>>>>>> 39e3b2cd62c2de8883c30f05476d7023731c24ce
