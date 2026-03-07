@@ -12,8 +12,7 @@ class ProductDicsount(models.Model):
     @api.depends('product_tmpl_id.discount')
     def _compute_discount(self):
         for product in self:
-            if not product.discount:
-                product.discount = product.product_tmpl_id.discount
+            product.discount = product.product_tmpl_id.discount
     
     
     @api.model
